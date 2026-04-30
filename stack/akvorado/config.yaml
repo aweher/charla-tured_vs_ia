@@ -1,0 +1,52 @@
+---
+# Akvorado orchestrator — config para demo
+# Docs: https://demo.akvorado.net/docs/configuration
+
+http:
+  listen: :8080
+
+kafka:
+  topic: flows
+  brokers:
+    - kafka:9092
+  topic-configuration:
+    num-partitions: 1
+    replication-factor: 1
+
+clickhouse:
+  servers:
+    - clickhouse:9000
+  database: akvorado
+  orchestrator-url: http://akvorado:8080
+
+inlet:
+  - flow:
+      inputs:
+        - type: udp
+          decoder: netflow
+          listen: :2055
+          workers: 1
+        - type: udp
+          decoder: sflow
+          listen: :6343
+          workers: 1
+    kafka:
+      compression-codec: zstd
+
+# GeoIP — requiere MaxMind GeoLite2 (cuenta gratuita en maxmind.com).
+# 1. Descargá GeoLite2-ASN.mmdb y GeoLite2-Country.mmdb
+# 2. Ponelos en ./akvorado/geoip/
+# 3. Descomentá las líneas de abajo y agregá el volume en docker-compose.yml:
+#      - ./akvorado/geoip:/etc/akvorado/geoip:ro
+# geoip:
+#   asn-database: /etc/akvorado/geoip/GeoLite2-ASN.mmdb
+#   country-database: /etc/akvorado/geoip/GeoLite2-Country.mmdb
+
+console:
+  - clickhouse:
+      servers:
+        - clickhouse:9000
+      database: akvorado
+
+outlet:
+  - {}

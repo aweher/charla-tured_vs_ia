@@ -1,0 +1,66 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+.cursor/
+
+# Logs
+*.log
+logs/
+
+# Docker / runtime data
+data/
+volumes/
+*-data/
+*-certs/
+.env
+
+# Stack — runtime dirs generados por contenedores
+# (reglas CVE, feeds de threat intel, DBs, caches RPKI, modelos LLM, etc.)
+stack/suricata/var-lib/
+stack/suricata/var-log/
+stack/wazuh/manager-logs/
+stack/fastnetmon/var-log/
+stack/misp/
+stack/n8n/
+stack/open-webui/
+stack/ollama/models/
+stack/crowdsec/config/hub/
+stack/crowdsec/config/collections/
+stack/crowdsec/config/parsers/
+stack/crowdsec/config/postoverflows/
+stack/crowdsec/config/scenarios/
+stack/crowdsec/config/contexts/
+stack/crowdsec/config/patterns/
+stack/crowdsec/config/notifications/
+stack/crowdsec/config/config.yaml
+stack/crowdsec/config/console.yaml
+stack/crowdsec/config/dev.yaml
+stack/crowdsec/config/simulation.yaml
+stack/crowdsec/config/user.yaml
+stack/crowdsec/config/local_api_credentials.yaml
+stack/crowdsec/config/online_api_credentials.yaml
+
+# Python (si alguien suma scripts)
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Node / generic
+node_modules/
+
+# Recon outputs
+scripts/targets/
+
+# Backups y temporales
+*.bak
+*.tmp
+*.orig

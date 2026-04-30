@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Stack Defensivo · Ayuda.LA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/aweher/ayudala-css-theme-ppt@main/css/ayudala-dark.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/aweher/ayudala-css-theme-ppt@main/css/components.css">
+</head>
+<body>
+
+  <div class="course-header">
+    <div class="brand">
+      <span class="dot"></span>
+      <span>Ayuda<span style="color: var(--ayl-orange);">.LA</span></span>
+      <span class="tagline">· Consultoría en redes e IA para ISPs</span>
+    </div>
+    <div class="course-title">STACK DEFENSIVO · GUÍA DE SERVICIOS</div>
+  </div>
+
+  <div class="course-footer">
+    <div class="module-crumb">Apertura</div>
+    <div class="copy"><a href="https://ayuda.la" style="color: var(--ayl-orange); text-decoration: none; pointer-events: auto;">ayuda.la</a> · tu red vs. la ia · v1.0</div>
+  </div>
+
+  <div class="reveal">
+    <div class="slides">
+
+<!-- ============================================================
+     MÓDULO 0 · APERTURA
+     ============================================================ -->
+<section data-module="0">
+
+  <!-- COVER -->
+  <section class="cover-slide" data-background-color="#111827">
+    <div class="eyebrow">Ayuda.LA · Tu Red vs. La IA</div>
+    <h1>Stack<br><span style="color: var(--ayl-orange);">Defensivo</span></h1>
+    <p class="subtitle">Guía interactiva de todos los servicios del docker-compose: qué hacen, dónde escuchan y cómo se conectan.</p>
+    <div class="meta">
+      <div class="meta-item">
+        <span class="meta-label">Servicios</span>
+        <span class="meta-value">17</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Capas</span>
+        <span class="meta-value">5 + LLM</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Versión</span>
+        <span class="meta-value">1.0 · 2026</span>
+      </div>
+    </div>
+    <p style="margin-top: 32px; font-family: var(--ayl-font-mono); font-size: 0.65em; color: var(--ayl-text-muted); letter-spacing: 0.05em;">Desarrollado por <span style="color: var(--ayl-orange); font-weight: 600;">Ayuda.LA</span> · <a href="https://ayuda.la" style="color: var(--ayl-orange); text-decoration: none; border-bottom: 1px solid rgba(251,140,35,0.4);">https://ayuda.la</a></p>
+  </section>
+
+  <!-- SOBRE AYUDA.LA -->
+  <section data-background-color="#111827">
+    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+      <span style="display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: var(--ayl-orange); box-shadow: 0 0 12px rgba(251,140,35,0.6);"></span>
+      <h3 style="margin: 0;">Ayuda<span style="color: var(--ayl-orange);">.LA</span></h3>
+      <span class="tag-pill orange" style="font-size: 0.55em;">https://ayuda.la</span>
+    </div>
+    <p class="pull-quote" style="font-size: 1.3em; max-width: 28ch;">Consultoría especializada en redes e inteligencia artificial para ISPs y operadores de red de Latinoamérica.
+      <span class="attr">— ayuda.la</span>
+    </p>
+    <div class="card-grid cols-3" style="margin-top: 28px;">
+      <div class="card accent">
+        <h4>Ingeniería de redes</h4>
+        <p class="xsmall">Diseño, implementación y optimización de infraestructura de red. BGP, MPLS, segmentación, automatización con Ansible/Nornir y monitoreo avanzado.</p>
+      </div>
+      <div class="card teal">
+        <h4>IA aplicada al NOC</h4>
+        <p class="xsmall">Integración de modelos de lenguaje y agentes inteligentes para detección de anomalías, correlación de eventos y respuesta automatizada a incidentes.</p>
+      </div>
+      <div class="card" style="border-left: 3px solid var(--ayl-info);">
+        <h4>Capacitación</h4>
+        <p class="xsmall">Cursos técnicos para equipos de operaciones: desde seguridad perimetral y RPKI hasta LLMs on-prem y orquestación de agentes de IA para ISPs.</p>
+      </div>
+    </div>
+    <div style="margin-top: 20px; display: flex; gap: 32px; font-family: var(--ayl-font-mono); font-size: 0.7em; color: var(--ayl-text-muted);">
+      <span><span style="color: var(--ayl-orange);">Web</span> · <a href="https://ayuda.la" style="color: var(--ayl-text-primary); text-decoration: none;">ayuda.la</a></span>
+      <span><span style="color: var(--ayl-orange);">Email</span> · info@ayuda.la</span>
+      <span><span style="color: var(--ayl-orange);">Región</span> · Latinoamérica</span>
+    </div>
+  </section>
+
+  <!-- AGENDA -->
+  <section>
+    <h3>Agenda</h3>
+    <ul class="agenda-list">
+      <li>
+        <span class="num">01</span>
+        <span class="title">Capa 1 · Higiene de borde
+          <span class="desc">Routinator — validación RPKI para BGP.</span>
+        </span>
+        <span class="dur">1 servicio</span>
+      </li>
+      <li>
+        <span class="num">02</span>
+        <span class="title">Capa 2 · Visibilidad
+          <span class="desc">Kafka, ClickHouse, Akvorado, Grafana — flujos y dashboards.</span>
+        </span>
+        <span class="dur">4 servicios</span>
+      </li>
+      <li>
+        <span class="num">03</span>
+        <span class="title">Capa 3 · Detección
+          <span class="desc">CrowdSec, Suricata, Wazuh — IDS y SIEM.</span>
+        </span>
+        <span class="dur">5 servicios</span>
+      </li>
+      <li>
+        <span class="num">04</span>
+        <span class="title">Capa 4 · Mitigación
+          <span class="desc">FastNetMon — detección y mitigación de DDoS.</span>
+        </span>
+        <span class="dur">1 servicio</span>
+      </li>
+      <li>
+        <span class="num">05</span>
+        <span class="title">Capa 5 · Intel + Automatización
+          <span class="desc">MISP, n8n — threat intel y workflows.</span>
+        </span>
+        <span class="dur">4 servicios</span>
+      </li>
+      <li>
+        <span class="num">06</span>
+        <span class="title">LLM On-Prem
+          <span class="desc">Ollama, Open WebUI — IA local para el NOC.</span>
+        </span>
+        <span class="dur">2 servicios</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ARQUITECTURA GENERAL -->
+  <section>
+    <h3>Arquitectura por capas</h3>
+    <div class="layer-stack">
+      <div class="layer-row l5">
+        <div class="layer-num">5</div>
+        <div>
+          <div class="layer-title">Intel + Automatización</div>
+          <div class="layer-desc">Threat intelligence y orquestación de respuesta.</div>
+        </div>
+        <div class="layer-tools">
+          <span class="layer-tool">MISP</span>
+          <span class="layer-tool">n8n</span>
+        </div>
+      </div>
+      <div class="layer-row l4">
+        <div class="layer-num">4</div>
+        <div>
+          <div class="layer-title">Mitigación</div>
+          <div class="layer-desc">Detección y bloqueo de ataques volumétricos.</div>
+        </div>
+        <div class="layer-tools">
+          <span class="layer-tool">FastNetMon</span>
+        </div>
+      </div>
+      <div class="layer-row l3">
+        <div class="layer-num">3</div>
+        <div>
+          <div class="layer-title">Detección</div>
+          <div class="layer-desc">IDS de red, IDS colaborativo y SIEM centralizado.</div>
+        </div>
+        <div class="layer-tools">
+          <span class="layer-tool">CrowdSec</span>
+          <span class="layer-tool">Suricata</span>
+          <span class="layer-tool">Wazuh</span>
+        </div>
+      </div>
+      <div class="layer-row l2">
+        <div class="layer-num">2</div>
+        <div>
+          <div class="layer-title">Visibilidad</div>
+          <div class="layer-desc">Recolección de flows, almacenamiento y dashboards.</div>
+        </div>
+        <div class="layer-tools">
+          <span class="layer-tool">Akvorado</span>
+          <span class="layer-tool">Kafka</span>
+          <span class="layer-tool">ClickHouse</span>
+          <span class="layer-tool">Grafana</span>
+        </div>
+      </div>
+      <div class="layer-row l1">
+        <div class="layer-num">1</div>
+        <div>
+          <div class="layer-title">Higiene de borde</div>
+          <div class="layer-desc">Validación criptográfica de rutas BGP con RPKI.</div>
+        </div>
+        <div class="layer-tools">
+          <span class="layer-tool">Routinator</span>
+        </div>
+      </div>
+    </div>
+    <p class="small text-muted mt-sm">+ Capa LLM On-Prem: Ollama + Open WebUI</p>
+  </section>
+
+</section>
+
+<!-- ============================================================
+     MÓDULO 1 · CAPA 1 — HIGIENE DE BORDE
+     ============================================================ -->
+<section data-module="1">
+
+  <section class="module-divider" data-background-color="#111827">
+    <span class="module-num">módulo 01</span>
+    <div class="accent-bar"></div>
+    <h2 class="module-title">Higiene de borde</h2>
+    <p class="module-subtitle">Validación RPKI — la primera línea de defensa para tu tabla BGP.</p>
+    <div class="module-meta">🛡️ 1 servicio · Profile: <code>capa1</code> · <a href="https://ayuda.la" style="color: var(--ayl-text-dim); text-decoration: none; font-size: 0.85em;">ayuda.la</a></div>
+  </section>
+
+  <!-- ROUTINATOR -->
+  <section>
+    <h3>Routinator <span class="tag-pill orange">RPKI Validator</span></h3>
+    <div class="two-col weighted-l">
+      <div>
+        <p class="small">Validador RPKI de NLnet Labs que descarga y verifica los ROAs (Route Origin Authorizations) de los 5 RIRs. Permite a tus routers BGP validar el origen de cada prefijo anunciado.</p>
+        <div class="card accent" style="margin-top: 16px;">
+          <h4>🔗 Acceso</h4>
+          <table class="cost-table xsmall">
+            <thead><tr><th>Protocolo</th><th>Puerto</th><th>URL</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>HTTP API + UI</strong></td>
+                <td class="cost-good">9556</td>
+                <td><code>http://localhost:9556</code></td>
+              </tr>
+              <tr>
+                <td><strong>RTR (routers)</strong></td>
+                <td class="cost-good">3323</td>
+                <td><code>routinator:3323</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot-red"></span>
+            <span class="dot-yellow"></span>
+            <span class="dot-green"></span>
+            <span class="title">docker — routinator</span>
+          </div>
+          <div class="terminal-body">
+<span class="dim"># Imagen</span>
+<span class="info">nlnetlabs/routinator:latest</span>
+<span class="dim"># Container</span>
+<span class="out">routinator</span>
+<span class="dim"># Profile</span>
+<span class="orange">capa1</span>
+<span class="dim"># Comando</span>
+<span class="prompt">$ </span><span class="cmd">server --rtr=0.0.0.0:3323 \
+  --http=0.0.0.0:9556</span>
+<span class="dim"># Volúmenes</span>
+<span class="out">./routinator/data → ~/.rpki-cache</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="callout info mt-sm">
+      <span class="callout-title">Nota</span>
+      <p class="xsmall">Requiere <code>routinator-init</code> (init container) que ajusta permisos del cache antes de arrancar.</p>
+    </div>
+  </section>
+
+</section>
+
+<!-- ============================================================
+     MÓDULO 2 · CAPA 2 — VISIBILIDAD
+     ============================================================ -->
+<section data-module="2">
+
+  <section class="module-divider" data-background-color="#111827">
+    <span class="module-num">módulo 02</span>
+    <div class="accent-bar"></div>
+    <h2 class="module-title">Visibilidad</h2>
+    <p class="module-subtitle">Recolección de flows, almacenamiento columnar y dashboards en tiempo real.</p>
+    <div class="module-meta">📊 4 servicios · Profile: <code>capa2</code> · <a href="https://ayuda.la" style="color: var(--ayl-text-dim); text-decoration: none; font-size: 0.85em;">ayuda.la</a></div>
+  </section>
+
+  <!-- KAFKA -->
+  <section>
+    <h3>Kafka <span class="tag-pill teal">Message Broker</span></h3>
+    <div class="two-col weighted-l">
+      <div>
+        <p class="small">Broker de mensajes Apache Kafka en modo KRaft (sin ZooKeeper). Actúa como buffer entre Akvorado (productor de flows) y ClickHouse (consumidor). Retiene mensajes por 24 horas.</p>
+        <div class="card teal" style="margin-top: 16px;">
+          <h4>🔗 Acceso</h4>
+          <table class="cost-table xsmall">
+            <thead><tr><th>Protocolo</th><th>Puerto</th><th>Notas</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>PLAINTEXT</strong></td>
+                <td class="cost-warn">9092</td>
+                <td>Solo interno (<code>kafka:9092</code>)</td>
+              </tr>
+              <tr>
+                <td><strong>CONTROLLER</strong></td>
+                <td class="cost-warn">9093</td>
+                <td>Solo interno (<code>kafka:9093</code>)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot-red"></span>
+            <span class="dot-yellow"></span>
+            <span class="dot-green"></span>
+            <span class="title">docker — kafka</span>
+          </div>
+          <div class="terminal-body">
+<span class="dim"># Imagen</span>
+<span class="info">apache/kafka:latest</span>
+<span class="dim"># Container</span>
+<span class="out">kafka</span>
+<span class="dim"># Modo</span>
+<span class="orange">KRaft (broker + controller)</span>
+<span class="dim"># Cluster ID</span>
+<span class="out">akvorado-demo-cluster-01</span>
+<span class="dim"># Retención</span>
+<span class="warn">24 horas</span>
+<span class="dim"># Volúmenes</span>
+<span class="out">./kafka/data → kraft-logs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="callout warn mt-sm">
+      <span class="callout-title">Sin puertos expuestos al host</span>
+      <p class="xsmall">Kafka solo es accesible dentro de la red <code>defensa</code>. Los servicios internos lo alcanzan como <code>kafka:9092</code>.</p>
+    </div>
+  </section>
+
+  <!-- CLICKHOUSE -->
+  <section>
+    <h3>ClickHouse <span class="tag-pill teal">Columnar DB</span></h3>
+    <div class="two-col weighted-l">
+      <div>
+        <p class="small">Base de datos columnar de alto rendimiento, optimizada para consultas analíticas sobre grandes volúmenes de datos de red. Almacena todos los flows que recolecta Akvorado.</p>
+        <div class="card teal" style="margin-top: 16px;">
+          <h4>🔗 Acceso</h4>
+          <table class="cost-table xsmall">
+            <thead><tr><th>Protocolo</th><th>Puerto</th><th>Notas</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>HTTP API</strong></td>
+                <td class="cost-warn">8123</td>
+                <td>Solo interno (healthcheck)</td>
+              </tr>
+              <tr>
+                <td><strong>Native</strong></td>
+                <td class="cost-warn">9000</td>
+                <td>Solo interno</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot-red"></span>
+            <span class="dot-yellow"></span>
+            <span class="dot-green"></span>
+            <span class="title">docker — clickhouse</span>
+          </div>
+          <div class="terminal-body">
+<span class="dim"># Imagen</span>
+<span class="info">clickhouse/clickhouse-server:24.3-alpine</span>
+<span class="dim"># Container</span>
+<span class="out">clickhouse</span>
+<span class="dim"># DB default</span>
+<span class="orange">akvorado</span>
+<span class="dim"># ulimits nofile</span>
+<span class="out">262144 (soft/hard)</span>
+<span class="dim"># Volúmenes</span>
+<span class="out">./clickhouse/data → /var/lib/clickhouse</span>
+<span class="out">./clickhouse/config.d/ → users.d/ (ro)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="callout info mt-sm">
+      <span class="callout-title">Base de datos interna</span>
+      <p class="xsmall">No expone puertos al host. Grafana y Akvorado la consultan internamente por la red <code>defensa</code>.</p>
+    </div>
+  </section>
+
+  <!-- AKVORADO -->
+  <section>
+    <h3>Akvorado <span class="tag-pill orange">Flow Collector</span></h3>
+    <div class="two-col weighted-l">
+      <div>
+        <p class="small">Colector y visualizador de flujos de red (NetFlow v5/v9, IPFIX, sFlow). Recibe los flows de routers y switches, los almacena en ClickHouse vía Kafka, y ofrece una UI web para análisis.</p>
+        <div class="card accent" style="margin-top: 16px;">
+          <h4>🔗 Acceso</h4>
+          <table class="cost-table xsmall">
+            <thead><tr><th>Protocolo</th><th>Puerto</th><th>URL</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>Web UI</strong></td>
+                <td class="cost-good">8081</td>
+                <td><code>http://localhost:8081</code></td>
+              </tr>
+              <tr>
+                <td><strong>NetFlow/IPFIX</strong></td>
+                <td class="cost-good">2055/udp</td>
+                <td>Receptor de flows</td>
+              </tr>
+              <tr>
+                <td><strong>sFlow</strong></td>
+                <td class="cost-good">6343/udp</td>
+                <td>Receptor de sFlow</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot-red"></span>
+            <span class="dot-yellow"></span>
+            <span class="dot-green"></span>
+            <span class="title">docker — akvorado</span>
+          </div>
+          <div class="terminal-body">
+<span class="dim"># Imagen</span>
+<span class="info">ghcr.io/akvorado/akvorado:latest</span>
+<span class="dim"># Container</span>
+<span class="out">akvorado</span>
+<span class="dim"># Depende de</span>
+<span class="warn">clickhouse (healthy)</span>
+<span class="warn">kafka (healthy)</span>
+<span class="dim"># Comando</span>
+<span class="prompt">$ </span><span class="cmd">orchestrator /etc/akvorado/akvorado.yaml</span>
+<span class="dim"># Config</span>
+<span class="out">./akvorado/config.yaml (ro)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GRAFANA -->
+  <section>
+    <h3>Grafana <span class="tag-pill orange">Dashboards</span></h3>
+    <div class="two-col weighted-l">
+      <div>
+        <p class="small">Plataforma de observabilidad y visualización. Conecta directamente a ClickHouse para crear dashboards de tráfico, análisis de flujos y métricas de red en tiempo real.</p>
+        <div class="card accent" style="margin-top: 16px;">
+          <h4>🔗 Acceso</h4>
+          <table class="cost-table xsmall">
+            <thead><tr><th>Protocolo</th><th>Puerto</th><th>URL</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>Web UI</strong></td>
+                <td class="cost-good">3001</td>
+                <td><code>http://localhost:3001</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warn mt-sm">
+          <span class="callout-title">Credenciales</span>
+          <p class="xsmall">User: <code>admin</code> · Pass: variable <code>GRAFANA_ADMIN_PASSWORD</code></p>
+        </div>
+      </div>
+      <div>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot-red"></span>
+            <span class="dot-yellow"></span>
+            <span class="dot-green"></span>
+            <span class="title">docker — grafana</span>
+          </div>
+          <div class="terminal-body">
+<span class="dim"># Imagen</span>
+<span class="info">grafana/grafana:11.2.0</span>
+<span class="dim"># Container</span>
+<span class="out">grafana</span>
+<span class="dim"># Plugins</span>
+<span class="orange">grafana-clickhouse-datasource</span>
+<span class="dim"># Depende de</span>
+<span class="warn">clickhouse (healthy)</span>
+<span class="dim"># Volúmenes</span>
+<span class="out">./grafana/data → /var/lib/grafana</span>
+<span class="out">./grafana/provisioning → (ro)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</section>
+
+<!-- ============================================================
+     MÓDULO 3 · CAPA 3 — DETECCIÓN
+     ============================================================ -->
+<section data-module="3">
+
+  <section class="module-divider" data-background-color="#111827">
+    <span class="module-num">módulo 03</span>
+    <div class="accent-bar"></div>
+    <h2 class="module-title">Detección</h2>
+    <p class="module-subtitle">IDS de red, IDS colaborativo y SIEM — detectá amenazas antes de que escalen.</p>
+    <div class="module-meta">🔍 5 servicios · Profiles: <code>capa3</code> <code>siem</code> · <a href="https://ayuda.la" style="color: var(--ayl-text-dim); text-decoration: none; font-size: 0.85em;">ayuda.la</a></div>
+  </section>
+
+  <!-- CROWDSEC -->
+  <section>
+    <h3>CrowdSec <span class="tag-pill orange">IDS Colaborativo</span></h3>
+    <div class="two-col weighted-l">
+      <div>
+        <p class="small">Motor de seguridad open source y colaborativo. Analiza logs del host (SSH, iptables, nginx) y comparte inteligencia de amenazas con la red global de CrowdSec. Detecta y bloquea IPs maliciosas.</p>
+        <div class="card accent" style="margin-top: 16px;">
+          <h4>🔗 Acceso</h4>
+          <table class="cost-table xsmall">
+            <thead><tr><th>Protocolo</th><th>Puerto</th><th>URL</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>LAPI (REST)</strong></td>
+                <td class="cost-good">8080</td>
+                <td><code>http://localhost:8080</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot-red"></span>
+            <span class="dot-yellow"></span>
+            <span class="dot-green"></span>
+            <span class="title">docker — crowdsec</span>
+          </div>
+          <div class="terminal-body">
+<span class="dim"># Imagen</span>
+<span class="info">crowdsecurity/crowdsec:latest</span>
+<span class="dim"># Container</span>
+<span class="out">crowdsec</span>
+<span class="dim"># Collections</span>
+<span class="orange">linux sshd iptables nginx</span>
+<span class="dim"># Volúmenes</span>
+<span class="out">./crowdsec/data → /var/lib/crowdsec</span>
+<span class="out">./crowdsec/config → /etc/crowdsec</span>
+<span class="out">/var/log → /var/log (ro)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="callout info mt-sm">
+      <span class="callout-title">Inteligencia colaborativa</span>
+      <p class="xsmall">Las colecciones incluyen parsers + escenarios para detectar brute force SSH, port scans y más. La LAPI comparte señales con la comunidad global.</p>
+    </div>
+  </section>
+
+  <!-- SURICATA -->
+  <section>
+    <h3>Suricata <span class="tag-pill pink">IDS de Red</span></h3>
+    <div class="two-col weighted-l">
+      <div>
+        <p class="small">Motor IDS/IPS de alto rendimiento que inspecciona tráfico de red en tiempo real. Corre en <code>network_mode: host</code> para capturar paquetes directamente de la interfaz física configurada.</p>
+        <div class="card danger" style="margin-top: 16px;">
+          <h4>🔗 Acceso</h4>
+          <table class="cost-table xsmall">
+            <thead><tr><th>Modo</th><th>Interfaz</th><th>Notas</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>Host network</strong></td>
+                <td class="cost-warn">eth0</td>
+                <td>Variable: <code>SURICATA_INTERFACE</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warn mt-sm">
+          <span class="callout-title">Capabilities</span>
+          <p class="xsmall">Requiere <code>NET_ADMIN</code>, <code>NET_RAW</code> y <code>SYS_NICE</code> para captura de paquetes.</p>
+        </div>
+      </div>
+      <div>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot-red"></span>
+            <span class="dot-yellow"></span>
+            <span class="dot-green"></span>
+            <span class="title">docker — suricata</span>
+          </div>
+          <div class="terminal-body">
+<span class="dim"># Imagen</span>
+<span class="info">jasonish/suricata:latest</span>
+<span class="dim"># Container</span>
+<span class="out">suricata</span>
+<span class="dim"># Red</span>
+<span class="err">network_mode: host</span>
+<span class="dim"># Comando</span>
+<span class="prompt">$ </span><span class="cmd">suricata -i eth0</span>
+<span class="dim"># Volúmenes</span>
+<span class="out">./suricata/etc → /etc/suricata</span>
+<span class="out">./suricata/var-log → logs</span>
+<span class="out">./suricata/var-lib → rules/data</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WAZUH INDEXER -->
+  <section>
+    <h3>Wazuh Indexer <span class="tag-pill teal">SIEM Storage</span></h3>
+    <div class="two-col weighted-l">
+      <div>
+        <p class="small">Motor de búsqueda basado en OpenSearch que indexa y almacena todos los eventos de seguridad recolectados por Wazuh Manager. Permite búsquedas rápidas sobre alertas históricas.</p>
+        <div class="card teal" style="margin-top: 16px;">
+          <h4>🔗 Acceso</h4>
+          <table class="cost-table xsmall">
+            <thead><tr><th>Protocolo</th><th>Puerto</th><th>URL</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>REST API</strong></td>
+                <td class="cost-good">9200</td>
+                <td><code>http://localhost:9200</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot-red"></span>
+            <span class="dot-yellow"></span>
+            <span class="dot-green"></span>
+            <span class="title">docker — wazuh-indexer</span>
+          </div>
+          <div class="terminal-body">
+<span class="dim"># Imagen</span>
+<span class="info">wazuh/wazuh-indexer:4.14.4</span>
+<span class="dim"># Container</span>
+<span class="out">wazuh-indexer</span>
+<span class="dim"># Profiles</span>
+<span class="orange">capa3, siem</span>
+<span class="dim"># JVM Heap</span>
+<span class="warn">-Xms2g -Xmx2g</span>
+<span class="dim"># Volúmenes</span>
+<span class="out">./wazuh/indexer-data</span>
+<span class="out">./wazuh/indexer-config/opensearch.yml</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WAZUH MANAGER -->
+  <section>
+    <h3>Wazuh Manager <span class="tag-pill orange">SIEM Core</span></h3>
+    <div class="two-col weighted-l">
+      <div>
+        <p class="small">Cerebro del SIEM Wazuh. Recibe eventos de agentes (syslog, registración), los correlaciona contra reglas de detección y envía alertas al indexer. Expone una API REST para gestión.</p>
+        <div class="card accent" style="margin-top: 16px;">
+          <h4>🔗 Acceso</h4>
+          <table class="cost-table xsmall">
+            <thead><tr><th>Protocolo</th><th>Puerto</th><th>Notas</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>Syslog TCP</strong></td>
+                <td class="cost-good">1514</td>
+                <td>Recepción de eventos</td>
+              </tr>
+              <tr>
+                <td><strong>Registro agentes</strong></td>
+                <td class="cost-good">1515</td>
+                <td>Enrollment de agentes</td>
+              </tr>
+              <tr>
+                <td><strong>Syslog UDP</strong></td>
+                <td class="cost-good">514/udp</td>
+                <td>Recepción UDP</td>
+              </tr>
+              <tr>
+                <td><strong>REST API</strong></td>
+                <td class="cost-good">55000</td>
+                <td><code>http://localhost:55000</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot-red"></span>
+            <span class="dot-yellow"></span>
+            <span class="dot-green"></span>
+            <span class="title">docker — wazuh-manager</span>
+          </div>
+          <div class="terminal-body">
+<span class="dim"># Imagen</span>
+<span class="info">wazuh/wazuh-manager:4.14.4</span>
+<span class="dim"># Container</span>
+<span class="out">wazuh-manager</span>
+<span class="dim"># Depende de</span>
+<span class="warn">wazuh-indexer (healthy)</span>
+<span class="dim"># API User</span>
+<span class="out">wazuh-wui</span>
+<span class="dim"># Volúmenes</span>
+<span class="out">./wazuh/manager-data</span>
+<span class="out">./wazuh/manager-logs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WAZUH DASHBOARD -->
+  <section>
+    <h3>Wazuh Dashboard <span class="tag-pill orange">SIEM UI</span></h3>
+    <div class="two-col weighted-l">
+      <div>
+        <p class="small">Interfaz web basada en OpenSearch Dashboards para visualizar alertas, explorar eventos de seguridad, gestionar agentes y configurar reglas de detección del SIEM.</p>
+        <div class="card accent" style="margin-top: 16px;">
+          <h4>🔗 Acceso</h4>
+          <table class="cost-table xsmall">
+            <thead><tr><th>Protocolo</th><th>Puerto</th><th>URL</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>Web UI</strong></td>
+                <td class="cost-good">5601</td>
+                <td><code>http://localhost:5601</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warn mt-sm">
+          <span class="callout-title">Credenciales</span>
+          <p class="xsmall">User: <code>admin</code> · Pass: variable <code>WAZUH_INDEXER_PASSWORD</code></p>
+        </div>
+      </div>
+      <div>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot-red"></span>
+            <span class="dot-yellow"></span>
+            <span class="dot-green"></span>
+            <span class="title">docker — wazuh-dashboard</span>
+          </div>
+          <div class="terminal-body">
+<span class="dim"># Imagen</span>
+<span class="info">wazuh/wazuh-dashboard:4.14.4</span>
+<span class="dim"># Container</span>
+<span class="out">wazuh-dashboard</span>
+<span class="dim"># Profiles</span>
+<span class="orange">capa3, siem</span>
+<span class="dim"># Depende de</span>
+<span class="warn">wazuh-indexer (healthy)</span>
+<span class="warn">wazuh-manager (healthy)</span>
+<span class="dim"># SSL</span>
+<span class="err">SERVER_SSL_ENABLED: false</span>
+<span class="dim"># Backend</span>
+<span class="out">http://wazuh-indexer:9200</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</section>
+
+<!-- ============================================================
+     MÓDULO 4 · CAPA 4 — MITIGACIÓN
+     ============================================================ -->
+<section data-module="4">
+
+  <section class="module-divider" data-background-color="#111827">
+    <span class="module-num">módulo 04</span>
+    <div class="accent-bar"></div>
+    <h2 class="module-title">Mitigación</h2>
+    <p class="module-subtitle">Detección y bloqueo automático de ataques DDoS volumétricos.</p>
+    <div class="module-meta">⚡ 1 servicio · Profile: <code>capa4</code> · <a href="https://ayuda.la" style="color: var(--ayl-text-dim); text-decoration: none; font-size: 0.85em;">ayuda.la</a></div>
+  </section>
+
+  <!-- FASTNETMON -->
+  <section>
+    <h3>FastNetMon <span class="tag-pill pink">DDoS Detection</span></h3>
+    <div class="two-col weighted-l">
+      <div>
+        <p class="small">Detector de ataques DDoS que analiza tráfico de red en tiempo real. Cuando detecta un ataque volumétrico, puede activar RTBH (Remotely Triggered Black Hole) anunciando la community BGP configurada para desviar el tráfico malicioso.</p>
+        <div class="card danger" style="margin-top: 16px;">
+          <h4>🔗 Acceso</h4>
+          <table class="cost-table xsmall">
+            <thead><tr><th>Modo</th><th>Detalle</th><th>Notas</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>Host network</strong></td>
+                <td class="cost-warn">network_mode: host</td>
+                <td>Acceso directo a interfaces</td>
+              </tr>
+              <tr>
+                <td><strong>RTBH Community</strong></td>
+                <td class="cost-good">65007:666</td>
+                <td>Variable: <code>FASTNETMON_RTBH_COMMUNITY</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot-red"></span>
+            <span class="dot-yellow"></span>
+            <span class="dot-green"></span>
+            <span class="title">docker — fastnetmon</span>
+          </div>
+          <div class="terminal-body">
+<span class="dim"># Imagen</span>
+<span class="info">ghcr.io/pavel-odintsov/fastnetmon-community:latest</span>
+<span class="dim"># Container</span>
+<span class="out">fastnetmon</span>
+<span class="dim"># Red</span>
+<span class="err">network_mode: host</span>
+<span class="dim"># Capabilities</span>
+<span class="warn">NET_ADMIN, NET_RAW</span>
+<span class="dim"># Volúmenes</span>
+<span class="out">./fastnetmon/etc → /etc/fastnetmon</span>
+<span class="out">./fastnetmon/var-log → logs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="callout danger mt-sm">
+      <span class="callout-title">network_mode: host</span>
+      <p class="xsmall">FastNetMon necesita acceso directo a las interfaces de red del host para capturar y analizar paquetes en tiempo real. No es compatible con redes bridge.</p>
+    </div>
+  </section>
+
+</section>
+
+<!-- ============================================================
+     MÓDULO 5 · CAPA 5 — INTEL + AUTOMATIZACIÓN
+     ============================================================ -->
+<section data-module="5">
+
+  <section class="module-divider" data-background-color="#111827">
+    <span class="module-num">módulo 05</span>
+    <div class="accent-bar"></div>
+    <h2 class="module-title">Intel + Automatización</h2>
+    <p class="module-subtitle">Threat intelligence compartida y orquestación de workflows de respuesta.</p>
+    <div class="module-meta">🧠 4 servicios · Profile: <code>capa5</code> · <a href="https://ayuda.la" style="color: var(--ayl-text-dim); text-decoration: none; font-size: 0.85em;">ayuda.la</a></div>
+  </section>
+
+  <!-- MISP DB -->
+  <section>
+    <h3>MISP — Backend <span class="tag-pill teal">Databases</span></h3>
+    <div class="two-col">
+      <div>
+        <div class="card teal">
+          <h4>🗄️ MISP DB (MariaDB)</h4>
+          <p class="xsmall">Base de datos relacional que almacena todos los indicadores de compromiso (IoCs), eventos, atributos y taxonomías de MISP.</p>
+          <table class="cost-table xsmall" style="margin-top: 8px;">
+            <thead><tr><th>Detalle</th><th>Valor</th></tr></thead>
+            <tbody>
+              <tr><td>Imagen</td><td><code>mariadb:10.11</code></td></tr>
+              <tr><td>Container</td><td><code>misp-db</code></td></tr>
+              <tr><td>DB</td><td><code>misp</code></td></tr>
+              <tr><td>Puertos</td><td class="cost-warn">Solo interno</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="card teal">
+          <h4>⚡ MISP Redis</h4>
+          <p class="xsmall">Cache en memoria para sesiones, colas de trabajo y pub/sub interno de MISP. Usa la imagen Alpine para mínimo footprint.</p>
+          <table class="cost-table xsmall" style="margin-top: 8px;">
+            <thead><tr><th>Detalle</th><th>Valor</th></tr></thead>
+            <tbody>
+              <tr><td>Imagen</td><td><code>redis:7-alpine</code></td></tr>
+              <tr><td>Container</td><td><code>misp-redis</code></td></tr>
+              <tr><td>Healthcheck</td><td><code>redis-cli ping</code></td></tr>
+              <tr><td>Puertos</td><td class="cost-warn">Solo interno</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="callout info mt-sm">
+      <span class="callout-title">Servicios de soporte</span>
+      <p class="xsmall">Ambos son internos a la red <code>defensa</code>. MISP core depende de que estén healthy antes de arrancar.</p>
+    </div>
+  </section>
+
+  <!-- MISP -->
+  <section>
+    <h3>MISP <span class="tag-pill orange">Threat Intelligence</span></h3>
+    <div class="two-col weighted-l">
+      <div>
+        <p class="small">Plataforma open source de threat intelligence para compartir, almacenar y correlacionar Indicadores de Compromiso (IoCs). Permite importar feeds de amenazas, crear eventos de seguridad y compartir inteligencia con otras organizaciones via MISP sync.</p>
+        <div class="card accent" style="margin-top: 16px;">
+          <h4>🔗 Acceso</h4>
+          <table class="cost-table xsmall">
+            <thead><tr><th>Protocolo</th><th>Puerto</th><th>URL</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>HTTP</strong></td>
+                <td class="cost-good">8083</td>
+                <td><code>http://localhost:8083</code></td>
+              </tr>
+              <tr>
+                <td><strong>HTTPS</strong></td>
+                <td class="cost-good">8443</td>
+                <td><code>https://localhost:8443</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warn mt-sm">
+          <span class="callout-title">Credenciales</span>
+          <p class="xsmall">Email: <code>MISP_ADMIN_EMAIL</code> · Pass: <code>MISP_ADMIN_PASSWORD</code> · API key auto-generada.</p>
+        </div>
+      </div>
+      <div>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot-red"></span>
+            <span class="dot-yellow"></span>
+            <span class="dot-green"></span>
+            <span class="title">docker — misp</span>
+          </div>
+          <div class="terminal-body">
+<span class="dim"># Imagen</span>
+<span class="info">ghcr.io/misp/misp-docker/misp-core:latest</span>
+<span class="dim"># Container</span>
+<span class="out">misp</span>
+<span class="dim"># Depende de</span>
+<span class="warn">misp-db (healthy)</span>
+<span class="warn">misp-redis (healthy)</span>
+<span class="dim"># Volúmenes (named)</span>
+<span class="out">misp_config → Config</span>
+<span class="out">misp_files → Files</span>
+<span class="out">misp_logs → Logs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- N8N -->
+  <section>
+    <h3>n8n <span class="tag-pill orange">Workflow Automation</span></h3>
+    <div class="two-col weighted-l">
+      <div>
+        <p class="small">Plataforma de automatización de workflows con interfaz visual drag-and-drop. Conecta MISP, CrowdSec, Wazuh y cualquier API para crear pipelines de respuesta automática ante incidentes de seguridad.</p>
+        <div class="card accent" style="margin-top: 16px;">
+          <h4>🔗 Acceso</h4>
+          <table class="cost-table xsmall">
+            <thead><tr><th>Protocolo</th><th>Puerto</th><th>URL</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>Web UI</strong></td>
+                <td class="cost-good">5678</td>
+                <td><code>http://localhost:5678</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warn mt-sm">
+          <span class="callout-title">Credenciales</span>
+          <p class="xsmall">User: <code>N8N_BASIC_AUTH_USER</code> · Pass: <code>N8N_BASIC_AUTH_PASSWORD</code></p>
+        </div>
+      </div>
+      <div>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot-red"></span>
+            <span class="dot-yellow"></span>
+            <span class="dot-green"></span>
+            <span class="title">docker — n8n</span>
+          </div>
+          <div class="terminal-body">
+<span class="dim"># Imagen</span>
+<span class="info">docker.n8n.io/n8nio/n8n:latest</span>
+<span class="dim"># Container</span>
+<span class="out">n8n</span>
+<span class="dim"># Timezone</span>
+<span class="orange">America/Argentina/Buenos_Aires</span>
+<span class="dim"># Webhook URL</span>
+<span class="out">http://localhost:5678/</span>
+<span class="dim"># Volúmenes</span>
+<span class="out">./n8n/data → /home/node/.n8n</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</section>
+
+<!-- ============================================================
+     MÓDULO 6 · LLM ON-PREM
+     ============================================================ -->
+<section data-module="6">
+
+  <section class="module-divider" data-background-color="#111827">
+    <span class="module-num">módulo 06</span>
+    <div class="accent-bar"></div>
+    <h2 class="module-title">LLM On-Prem</h2>
+    <p class="module-subtitle">Inteligencia artificial local — modelos de lenguaje sin depender de la nube.</p>
+    <div class="module-meta">🤖 2 servicios · Profile: <code>llm</code> · <a href="https://ayuda.la" style="color: var(--ayl-text-dim); text-decoration: none; font-size: 0.85em;">ayuda.la</a></div>
+  </section>
+
+  <!-- OLLAMA -->
+  <section>
+    <h3>Ollama <span class="tag-pill orange">LLM Runtime</span></h3>
+    <div class="two-col weighted-l">
+      <div>
+        <p class="small">Runtime para ejecutar modelos de lenguaje grandes (LLMs) de forma local. Soporta modelos como Llama, Mistral, Qwen, Gemma y más. Expone una API compatible con OpenAI para integración con herramientas del NOC.</p>
+        <div class="card accent" style="margin-top: 16px;">
+          <h4>🔗 Acceso</h4>
+          <table class="cost-table xsmall">
+            <thead><tr><th>Protocolo</th><th>Puerto</th><th>URL</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>REST API</strong></td>
+                <td class="cost-good">11434</td>
+                <td><code>http://localhost:11434</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout info mt-sm">
+          <span class="callout-title">GPU opcional</span>
+          <p class="xsmall">Descomentar el bloque <code>deploy.resources.reservations.devices</code> para usar NVIDIA GPU.</p>
+        </div>
+      </div>
+      <div>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot-red"></span>
+            <span class="dot-yellow"></span>
+            <span class="dot-green"></span>
+            <span class="title">docker — ollama</span>
+          </div>
+          <div class="terminal-body">
+<span class="dim"># Imagen</span>
+<span class="info">ollama/ollama:latest</span>
+<span class="dim"># Container</span>
+<span class="out">ollama</span>
+<span class="dim"># Healthcheck</span>
+<span class="prompt">$ </span><span class="cmd">curl -f http://localhost:11434/</span>
+<span class="dim"># Volúmenes</span>
+<span class="out">./ollama/models → /root/.ollama</span>
+<span class="dim"># GPU (opcional)</span>
+<span class="warn">driver: nvidia, count: all</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OPEN WEBUI -->
+  <section>
+    <h3>Open WebUI <span class="tag-pill orange">LLM Interface</span></h3>
+    <div class="two-col weighted-l">
+      <div>
+        <p class="small">Interfaz web tipo ChatGPT para interactuar con los modelos locales de Ollama. Permite crear chats, gestionar modelos, subir documentos para RAG y personalizar system prompts orientados al NOC.</p>
+        <div class="card accent" style="margin-top: 16px;">
+          <h4>🔗 Acceso</h4>
+          <table class="cost-table xsmall">
+            <thead><tr><th>Protocolo</th><th>Puerto</th><th>URL</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>Web UI</strong></td>
+                <td class="cost-good">3000</td>
+                <td><code>http://localhost:3000</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot-red"></span>
+            <span class="dot-yellow"></span>
+            <span class="dot-green"></span>
+            <span class="title">docker — open-webui</span>
+          </div>
+          <div class="terminal-body">
+<span class="dim"># Imagen</span>
+<span class="info">ghcr.io/open-webui/open-webui:main</span>
+<span class="dim"># Container</span>
+<span class="out">open-webui</span>
+<span class="dim"># Depende de</span>
+<span class="warn">ollama (healthy)</span>
+<span class="dim"># Backend</span>
+<span class="orange">http://ollama:11434</span>
+<span class="dim"># Nombre</span>
+<span class="out">Tu Red vs. La IA · LLM On-Prem</span>
+<span class="dim"># Volúmenes</span>
+<span class="out">./open-webui/data → backend/data</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</section>
+
+<!-- ============================================================
+     MÓDULO 7 · RESUMEN
+     ============================================================ -->
+<section data-module="7">
+
+  <!-- TABLA RESUMEN -->
+  <section>
+    <h3>Resumen de puertos</h3>
+    <table class="cost-table small">
+      <thead>
+        <tr><th>Servicio</th><th>Puerto</th><th>Protocolo</th><th>Capa</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Routinator</strong></td><td class="cost-good">9556</td><td>HTTP UI + API</td><td><span class="tag-pill teal" style="font-size:0.7em;">capa1</span></td></tr>
+        <tr><td><strong>Routinator RTR</strong></td><td class="cost-good">3323</td><td>RTR (routers BGP)</td><td><span class="tag-pill teal" style="font-size:0.7em;">capa1</span></td></tr>
+        <tr><td><strong>Akvorado</strong></td><td class="cost-good">8081</td><td>HTTP UI</td><td><span class="tag-pill teal" style="font-size:0.7em;">capa2</span></td></tr>
+        <tr><td><strong>Akvorado NetFlow</strong></td><td class="cost-good">2055</td><td>UDP</td><td><span class="tag-pill teal" style="font-size:0.7em;">capa2</span></td></tr>
+        <tr><td><strong>Akvorado sFlow</strong></td><td class="cost-good">6343</td><td>UDP</td><td><span class="tag-pill teal" style="font-size:0.7em;">capa2</span></td></tr>
+        <tr><td><strong>Grafana</strong></td><td class="cost-good">3001</td><td>HTTP UI</td><td><span class="tag-pill teal" style="font-size:0.7em;">capa2</span></td></tr>
+        <tr><td><strong>CrowdSec</strong></td><td class="cost-good">8080</td><td>LAPI REST</td><td><span class="tag-pill orange" style="font-size:0.7em;">capa3</span></td></tr>
+        <tr><td><strong>Wazuh Indexer</strong></td><td class="cost-good">9200</td><td>REST API</td><td><span class="tag-pill orange" style="font-size:0.7em;">siem</span></td></tr>
+        <tr><td><strong>Wazuh Manager</strong></td><td class="cost-good">55000</td><td>REST API</td><td><span class="tag-pill orange" style="font-size:0.7em;">siem</span></td></tr>
+        <tr><td><strong>Wazuh Dashboard</strong></td><td class="cost-good">5601</td><td>HTTP UI</td><td><span class="tag-pill orange" style="font-size:0.7em;">siem</span></td></tr>
+        <tr><td><strong>MISP</strong></td><td class="cost-good">8083 / 8443</td><td>HTTP / HTTPS</td><td><span class="tag-pill pink" style="font-size:0.7em;">capa5</span></td></tr>
+        <tr><td><strong>n8n</strong></td><td class="cost-good">5678</td><td>HTTP UI</td><td><span class="tag-pill pink" style="font-size:0.7em;">capa5</span></td></tr>
+        <tr><td><strong>Ollama</strong></td><td class="cost-good">11434</td><td>REST API</td><td><span class="tag-pill orange" style="font-size:0.7em;">llm</span></td></tr>
+        <tr><td><strong>Open WebUI</strong></td><td class="cost-good">3000</td><td>HTTP UI</td><td><span class="tag-pill orange" style="font-size:0.7em;">llm</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- COMO LEVANTAR -->
+  <section>
+    <h3>Cómo levantar el stack</h3>
+    <div class="terminal">
+      <div class="terminal-header">
+        <span class="dot-red"></span>
+        <span class="dot-yellow"></span>
+        <span class="dot-green"></span>
+        <span class="title">bash — operador@noc:~/stack</span>
+      </div>
+      <div class="terminal-body">
+<span class="dim"># Todo el stack</span>
+<span class="prompt">$ </span><span class="cmd">COMPOSE_PROFILES=capa1,capa2,capa3,capa4,capa5,siem,llm \
+  docker compose up -d</span>
+
+<span class="dim"># Solo una capa</span>
+<span class="prompt">$ </span><span class="cmd">COMPOSE_PROFILES=capa2 docker compose up -d</span>
+
+<span class="dim"># Verificar estado</span>
+<span class="prompt">$ </span><span class="cmd">docker compose ps</span>
+<span class="out">NAME          STATUS    PORTS</span>
+<span class="info">routinator    running   0.0.0.0:9556→9556, 0.0.0.0:3323→3323</span>
+<span class="info">akvorado      running   0.0.0.0:8081→8080, 0.0.0.0:2055→2055</span>
+<span class="info">grafana       running   0.0.0.0:3001→3000</span>
+<span class="info">crowdsec      running   0.0.0.0:8080→8080</span>
+<span class="info">wazuh-dash    running   0.0.0.0:5601→5601</span>
+<span class="info">misp          running   0.0.0.0:8083→80, 0.0.0.0:8443→443</span>
+<span class="info">n8n           running   0.0.0.0:5678→5678</span>
+<span class="info">ollama        running   0.0.0.0:11434→11434</span>
+<span class="info">open-webui    running   0.0.0.0:3000→8080</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- THANKS -->
+  <section class="thanks-slide" data-background-color="#111827">
+    <div style="display: inline-flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+      <span style="display: inline-block; width: 18px; height: 18px; border-radius: 50%; background: var(--ayl-orange); box-shadow: 0 0 16px rgba(251,140,35,0.5);"></span>
+      <span style="font-family: var(--ayl-font-display); font-size: 1.2em; font-weight: 700; color: var(--ayl-text-primary);">Ayuda<span style="color: var(--ayl-orange);">.LA</span></span>
+    </div>
+    <h1>¡Gracias!</h1>
+    <p class="thanks-sub">Consultá esta guía en cualquier momento desde el puerto 32000.<br>¿Necesitás ayuda con tu infraestructura? Hablemos.</p>
+    <div class="thanks-contact">
+      <div class="tc-item"><strong>Web</strong> <a href="https://ayuda.la" style="color: var(--ayl-orange); text-decoration: none;">https://ayuda.la</a></div>
+      <div class="tc-item"><strong>Email</strong> info@ayuda.la</div>
+      <div class="tc-item"><strong>Guía</strong> http://localhost:32000</div>
+    </div>
+    <p style="margin-top: 28px; font-family: var(--ayl-font-mono); font-size: 0.55em; color: var(--ayl-text-dim); letter-spacing: 0.08em; text-transform: uppercase;">Consultoría en redes e IA para ISPs · Latinoamérica</p>
+  </section>
+
+</section>
+
+    </div><!-- /.slides -->
+  </div><!-- /.reveal -->
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="js/course.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      controls: true,
+      progress: true,
+      history: true,
+      transition: 'fade',
+      transitionSpeed: 'fast',
+      backgroundTransition: 'fade',
+      width: 1280,
+      height: 800,
+      margin: 0.06,
+      minScale: 0.2,
+      maxScale: 1.6,
+      center: false,
+      pdfSeparateFragments: false
+    });
+  </script>
+
+</body>
+</html>

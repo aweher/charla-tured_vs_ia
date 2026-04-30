@@ -1,0 +1,464 @@
+# ============================================================
+# Tu Red vs. La IA — Stack defensivo completo
+# ------------------------------------------------------------
+# Levantá todo:  docker compose up -d
+#   (requiere .env con COMPOSE_PROFILES — ver .env.example)
+#
+# Solo una capa: editá COMPOSE_PROFILES en .env, o:
+#   COMPOSE_PROFILES=capa1 docker compose up -d
+#
+# Profiles disponibles:
+#   capa1  — higiene de borde (Routinator)
+#   capa2  — visibilidad (Akvorado + ClickHouse + Grafana)
+#   capa3  — detección (CrowdSec + Suricata)
+#   siem   — SIEM (Wazuh indexer + manager + dashboard)
+#   capa4  — mitigación (fastnetmon)
+#   capa5  — intel + automatización (MISP + n8n)
+#   llm    — LLM on-prem (Ollama + Open WebUI)
+# ============================================================
+
+name: ayuda-la
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+networks:
+  defensa:
+    driver: bridge
+
+# ============================================================
+# CAPA 1 · HIGIENE DE BORDE
+# ============================================================
+
+services:
+
+  routinator-init:
+    image: nlnetlabs/routinator:latest
+    container_name: routinator-init
+    profiles: ["capa1"]
+    user: "0:0"
+    entrypoint: ["/bin/sh", "-c", "chown -R routinator:routinator /home/routinator/.rpki-cache"]
+    volumes:
+      - ./routinator/data:/home/routinator/.rpki-cache
+
+  routinator:
+    image: nlnetlabs/routinator:latest
+    container_name: routinator
+    profiles: ["capa1"]
+    restart: unless-stopped
+    logging: *default-logging
+    networks: [defensa]
+    depends_on:
+      routinator-init:
+        condition: service_completed_successfully
+    ports:
+      - "${ROUTINATOR_HTTP_PORT:-9556}:9556"     # HTTP API + UI
+      - "${ROUTINATOR_RTR_PORT:-3323}:3323"      # RTR para routers BGP
+    volumes:
+      - ./routinator/data:/home/routinator/.rpki-cache
+    command:
+      - server
+      - --rtr=0.0.0.0:3323
+      - --http=0.0.0.0:9556
+
+# ============================================================
+# CAPA 2 · VISIBILIDAD
+# ============================================================
+
+  kafka:
+    image: apache/kafka:latest
+    container_name: kafka
+    profiles: ["capa2"]
+    restart: unless-stopped
+    logging: *default-logging
+    networks: [defensa]
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LOG_RETENTION_HOURS: 24
+      CLUSTER_ID: "akvorado-demo-cluster-01"
+    volumes:
+      - ./kafka/data:/tmp/kraft-combined-logs
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.3-alpine
+    container_name: clickhouse
+    profiles: ["capa2"]
+    restart: unless-stopped
+    logging: *default-logging
+    networks: [defensa]
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:8123/ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    volumes:
+      - ./clickhouse/data:/var/lib/clickhouse
+      - ./clickhouse/config.d/allow-network.xml:/etc/clickhouse-server/users.d/allow-network.xml:ro
+    environment:
+      CLICKHOUSE_DB: akvorado
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+
+  akvorado:
+    image: ghcr.io/akvorado/akvorado:latest
+    container_name: akvorado
+    profiles: ["capa2"]
+    restart: unless-stopped
+    logging: *default-logging
+    networks: [defensa]
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    ports:
+      - "${AKVORADO_HTTP_PORT:-8081}:8080"      # UI
+      - "${PMACCT_NFLOW_PORT:-2055}:2055/udp"   # NetFlow v5/v9/IPFIX
+      - "${PMACCT_SFLOW_PORT:-6343}:6343/udp"   # sFlow
+    volumes:
+      - ./akvorado/config.yaml:/etc/akvorado/akvorado.yaml:ro
+    command: ["orchestrator", "/etc/akvorado/akvorado.yaml"]
+
+  grafana:
+    image: grafana/grafana:11.2.0
+    container_name: grafana
+    profiles: ["capa2"]
+    restart: unless-stopped
+    logging: *default-logging
+    networks: [defensa]
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+    ports:
+      - "${GRAFANA_PORT:-3001}:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_INSTALL_PLUGINS: grafana-clickhouse-datasource
+    volumes:
+      - ./grafana/data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+
+# ============================================================
+# CAPA 3 · DETECCIÓN
+# ============================================================
+
+  crowdsec:
+    image: crowdsecurity/crowdsec:latest
+    container_name: crowdsec
+    profiles: ["capa3"]
+    restart: unless-stopped
+    logging: *default-logging
+    networks: [defensa]
+    ports:
+      - "${CROWDSEC_API_PORT:-8080}:8080"
+    environment:
+      COLLECTIONS: "crowdsecurity/linux crowdsecurity/sshd crowdsecurity/iptables crowdsecurity/nginx"
+      CUSTOM_HOSTNAME: ${ORG_NAME:-AyudaLA-Demo}
+    volumes:
+      - ./crowdsec/data:/var/lib/crowdsec/data
+      - ./crowdsec/config:/etc/crowdsec
+      - /var/log:/var/log:ro       # leemos logs del host
+
+  suricata:
+    image: jasonish/suricata:latest
+    container_name: suricata
+    profiles: ["capa3"]
+    restart: unless-stopped
+    logging: *default-logging
+    network_mode: host             # necesita acceso directo a interfaces
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+      - SYS_NICE
+    volumes:
+      - ./suricata/etc:/etc/suricata
+      - ./suricata/var-log:/var/log/suricata
+      - ./suricata/var-lib:/var/lib/suricata
+    command: -i ${SURICATA_INTERFACE:-eth0}
+
+  wazuh-indexer:
+    image: wazuh/wazuh-indexer:4.14.4
+    container_name: wazuh-indexer
+    profiles: ["capa3", "siem"]
+    restart: unless-stopped
+    logging: *default-logging
+    networks: [defensa]
+    hostname: wazuh-indexer
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:9200 || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+    ports:
+      - "${WAZUH_INDEXER_PORT:-9200}:9200"
+    environment:
+      OPENSEARCH_JAVA_OPTS: "-Xms1g -Xmx1g"
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - ./wazuh/indexer-data:/var/lib/wazuh-indexer
+      - ./wazuh/indexer-config/opensearch.yml:/usr/share/wazuh-indexer/config/opensearch.yml
+
+  wazuh-manager:
+    image: wazuh/wazuh-manager:4.14.4
+    container_name: wazuh-manager
+    profiles: ["capa3", "siem"]
+    restart: unless-stopped
+    logging: *default-logging
+    networks: [defensa]
+    hostname: wazuh-manager
+    healthcheck:
+      test: ["CMD-SHELL", "/var/ossec/bin/wazuh-control status | grep -q 'is running' || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 90s
+    depends_on:
+      wazuh-indexer:
+        condition: service_healthy
+    ports:
+      - "1514:1514"      # syslog
+      - "1515:1515"      # registración de agentes
+      - "514:514/udp"    # syslog UDP
+      - "${WAZUH_API_PORT:-55000}:55000"
+    environment:
+      INDEXER_URL: http://wazuh-indexer:9200
+      INDEXER_USERNAME: admin
+      INDEXER_PASSWORD: ${WAZUH_INDEXER_PASSWORD:-Changeme-WazuhIndexer-2026!}
+      FILEBEAT_SSL_VERIFICATION_MODE: none
+      API_USERNAME: wazuh-wui
+      API_PASSWORD: ${WAZUH_API_PASSWORD:-Changeme-WazuhAPI-2026!}
+    volumes:
+      - ./wazuh/manager-data:/var/ossec/data
+      - ./wazuh/manager-logs:/var/ossec/logs
+
+  wazuh-dashboard:
+    image: wazuh/wazuh-dashboard:4.14.4
+    container_name: wazuh-dashboard
+    profiles: ["capa3", "siem"]
+    restart: unless-stopped
+    logging: *default-logging
+    networks: [defensa]
+    depends_on:
+      wazuh-indexer:
+        condition: service_healthy
+      wazuh-manager:
+        condition: service_healthy
+    ports:
+      - "${WAZUH_DASHBOARD_PORT:-5601}:5601"
+    environment:
+      INDEXER_USERNAME: admin
+      INDEXER_PASSWORD: ${WAZUH_INDEXER_PASSWORD:-Changeme-WazuhIndexer-2026!}
+      WAZUH_API_URL: https://wazuh-manager
+      DASHBOARD_USERNAME: kibanaserver
+      DASHBOARD_PASSWORD: kibanaserver
+      SERVER_SSL_ENABLED: "false"
+      OPENSEARCH_HOSTS: "http://wazuh-indexer:9200"
+    volumes:
+      - ./wazuh/dashboard-config/opensearch_dashboards.yml:/usr/share/wazuh-dashboard/config/opensearch_dashboards.yml
+      - ./wazuh/dashboard-config/wazuh.yml:/usr/share/wazuh-dashboard/data/wazuh/config/wazuh.yml:ro
+
+# ============================================================
+# CAPA 4 · MITIGACIÓN
+# ============================================================
+
+  fastnetmon:
+    image: ghcr.io/pavel-odintsov/fastnetmon-community:latest
+    container_name: fastnetmon
+    profiles: ["capa4"]
+    restart: unless-stopped
+    logging: *default-logging
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    volumes:
+      - ./fastnetmon/etc:/etc/fastnetmon
+      - ./fastnetmon/var-log:/var/log/fastnetmon
+    environment:
+      FASTNETMON_RTBH_COMMUNITY: ${FASTNETMON_RTBH_COMMUNITY:-65007:666}
+
+# ============================================================
+# CAPA 5 · INTEL + AUTOMATIZACIÓN
+# ============================================================
+
+  misp-db:
+    image: mariadb:10.11
+    container_name: misp-db
+    profiles: ["capa5"]
+    restart: unless-stopped
+    logging: *default-logging
+    networks: [defensa]
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    environment:
+      MYSQL_USER: misp
+      MYSQL_PASSWORD: ${MISP_ADMIN_PASSWORD:-Changeme-MISP-2026!}
+      MYSQL_DATABASE: misp
+      MYSQL_RANDOM_ROOT_PASSWORD: "1"
+    volumes:
+      - ./misp/db:/var/lib/mysql
+
+  misp-redis:
+    image: redis:7-alpine
+    container_name: misp-redis
+    profiles: ["capa5"]
+    restart: unless-stopped
+    logging: *default-logging
+    networks: [defensa]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    volumes:
+      - ./misp/redis:/data
+
+  misp:
+    image: ghcr.io/misp/misp-docker/misp-core:latest
+    container_name: misp
+    profiles: ["capa5"]
+    restart: unless-stopped
+    logging: *default-logging
+    networks: [defensa]
+    depends_on:
+      misp-db:
+        condition: service_healthy
+      misp-redis:
+        condition: service_healthy
+    ports:
+      - "${MISP_HTTP_PORT:-8083}:80"
+      - "${MISP_HTTPS_PORT:-8443}:443"
+    environment:
+      BASE_URL: ${MISP_BASEURL:-https://localhost:8443}
+      REDIS_HOST: misp-redis
+      MYSQL_HOST: misp-db
+      MYSQL_USER: misp
+      MYSQL_PASSWORD: ${MISP_ADMIN_PASSWORD:-Changeme-MISP-2026!}
+      MYSQL_DATABASE: misp
+      ADMIN_EMAIL: ${MISP_ADMIN_EMAIL:-admin@example.com}
+      ADMIN_PASSWORD: ${MISP_ADMIN_PASSWORD:-Changeme-MISP-2026!}
+      AUTOGEN_ADMIN_KEY: "true"
+    volumes:
+      - misp_config:/var/www/MISP/app/Config
+      - misp_files:/var/www/MISP/app/files
+      - misp_logs:/var/www/MISP/app/tmp/logs
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:latest
+    container_name: n8n
+    profiles: ["capa5"]
+    restart: unless-stopped
+    logging: *default-logging
+    networks: [defensa]
+    ports:
+      - "${N8N_HTTP_PORT:-5678}:5678"
+    environment:
+      N8N_BASIC_AUTH_ACTIVE: "true"
+      N8N_BASIC_AUTH_USER: ${N8N_BASIC_AUTH_USER:-admin}
+      N8N_BASIC_AUTH_PASSWORD: ${N8N_BASIC_AUTH_PASSWORD:-Changeme-N8N-2026!}
+      WEBHOOK_URL: http://localhost:${N8N_HTTP_PORT:-5678}/
+      GENERIC_TIMEZONE: America/Argentina/Buenos_Aires
+    volumes:
+      - ./n8n/data:/home/node/.n8n
+
+# ============================================================
+# LLM ON-PREM
+# ============================================================
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    profiles: ["llm"]
+    restart: unless-stopped
+    logging: *default-logging
+    networks: [defensa]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:11434/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    ports:
+      - "${OLLAMA_PORT:-11434}:11434"
+    volumes:
+      - ${OLLAMA_MODELS_VOLUME:-./ollama/models}:/root/.ollama
+    # Si tenés GPU NVIDIA, descomenta el bloque deploy:
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    profiles: ["llm"]
+    restart: unless-stopped
+    logging: *default-logging
+    networks: [defensa]
+    depends_on:
+      ollama:
+        condition: service_healthy
+    ports:
+      - "${OPENWEBUI_PORT:-3000}:8080"
+    environment:
+      OLLAMA_BASE_URL: http://ollama:11434
+      WEBUI_SECRET_KEY: ${OPENWEBUI_SECRET_KEY:-changeme}
+      WEBUI_NAME: "Tu Red vs. La IA · LLM On-Prem"
+    volumes:
+      - ./open-webui/data:/app/backend/data
+
+# ============================================================
+# DOCUMENTACIÓN · GUÍA DE SERVICIOS
+# ============================================================
+
+  dashboard-ppt:
+    image: caddy:2-alpine
+    container_name: dashboard-ppt
+    restart: unless-stopped
+    logging: *default-logging
+    networks: [defensa]
+    ports:
+      - "${DASHBOARD_PPT_PORT:-32000}:32000"
+    volumes:
+      - ./dashboard-ppt/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./dashboard-ppt/course:/srv:ro
+
+volumes:
+  misp_config:
+  misp_files:
+  misp_logs:
